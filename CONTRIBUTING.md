@@ -44,6 +44,21 @@ The test CLI currently constrains Mocha to an older major with vulnerable
 serialization/diff dependencies. A narrowly scoped override uses patched Mocha 12.
 Keep the minimum/stable extension-host tests green when updating it, and remove
 the override when the upstream test CLI supports the patched major.
+The test-electron override also keeps the test CLI on the same current downloader
+as the project, including support for newer macOS application layouts.
+
+### Registry portability
+
+Do not commit a corporate registry URL or registry credentials. The project
+`.npmrc` only enables `omit-lockfile-registry-resolved`: the lockfile retains exact
+versions and integrity hashes without embedding registry download URLs.
+`npm ci` uses the registry configured in each environment. Corporate development
+can therefore keep its required registry/CFS configuration, while public
+contributors and GitHub Actions use their normal public registry.
+
+Run `npm install` with the same project configuration when updating dependencies.
+The package verification check rejects registry URLs in the lockfile so a local
+corporate configuration cannot accidentally become a public installation requirement.
 
 ## Implementation boundaries
 
