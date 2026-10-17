@@ -72,6 +72,27 @@ Keep command arguments structured and validate identifiers. Never log raw CLI
 output or credentials. Error states must not be represented as successful empty
 results. Dispose listeners, menus, timers and owned processes.
 
+## CLI Context branding
+
+The display name is **CLI Context: Azure**. Keep the published identity
+`jcallaghan.azure-cli-context`, the `azure-cli-context.*` command IDs and the
+configuration keys stable when changing presentation.
+
+The Marketplace icon is an original terminal frame with a CLI label, ellipsis and
+an AZ tag, not a Microsoft product logo. Within VS Code, use the built-in Azure
+glyph to identify Azure context. A future **CLI Context: GitHub** companion can use
+the same icon geometry with a GH tag; it is not part of this extension.
+
+The committed 256-pixel PNG requires no build-time image dependencies. To regenerate
+it on Windows with PowerShell 7 and the installed Segoe UI font:
+
+```powershell
+pwsh -NoProfile -File .\scripts\generate-icon.ps1 -Tag AZ -OutputPath .\images\icon.png
+```
+
+Use `-Tag GH` and a separate output path to preview the companion artwork without
+replacing the Azure asset. Review generated icons at 256, 128 and 64 pixels.
+
 ## Manual release checklist
 
 Passing CI is necessary but not a replacement for interactive checks.
