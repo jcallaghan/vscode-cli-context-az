@@ -1,0 +1,30 @@
+name: Package release candidate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:unit
+      - run: npm run package
+      - run: xvfb-run -a npm run test --ignore-scripts
+      - run: npm audit --audit-level=low
+      - run: npm run vsix
+      - run: npm run verify:vsix
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: azure-cli-context-${{ github.sha }}
+          path: '*.vsix'
+          if-no-files-found: error
+          retention-days: 30
