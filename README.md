@@ -1,4 +1,6 @@
-# Azure CLI Context
+# CLI Context: Azure
+
+<img src="images/icon.png" alt="CLI Context: Azure - terminal, ellipsis and AZ tag" width="128" height="128">
 
 [![CI](https://github.com/jcallaghan/vscode-cli-context-az/actions/workflows/ci.yml/badge.svg)](https://github.com/jcallaghan/vscode-cli-context-az/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -9,6 +11,12 @@ or start an Azure CLI sign-in.
 
 > Initial release candidate. Marketplace publication is a separate, manual release step.
 > This project is independent and is not affiliated with Microsoft.
+
+Part of the **CLI Context** family: an original terminal-and-ellipsis mark with a
+provider tag (**AZ** here, **GH** for a possible GitHub companion). The Marketplace
+icon identifies the extension; VS Code's built-in Azure icon identifies Azure
+context inside the status bar and commands. A GitHub companion is not implemented
+in this extension.
 
 ## Features
 
@@ -66,7 +74,7 @@ There is no fixed five-second assumption about how long authentication takes.
 
 ## Commands
 
-Open the Command Palette and search for **Azure CLI Context**:
+Open the Command Palette and search for **CLI Context: Azure**:
 
 | Command | Purpose |
 | --- | --- |
@@ -128,7 +136,7 @@ history and the login terminal are outside these display controls.
 | Context not updating | Run Refresh Azure Account; check `AZURE_CONFIG_DIR` in the extension host environment |
 | Login completed but the UI did not update | Refocus VS Code or use Refresh; verify the login process has finished |
 
-The **Azure CLI Context** Output channel records redacted diagnostic categories.
+The **CLI Context: Azure** Output channel records redacted diagnostic categories.
 Do not include tokens, account dumps or sensitive screenshots in public issues.
 See [SECURITY.md](SECURITY.md) to report a suspected vulnerability privately.
 
