@@ -40,10 +40,37 @@ Keep the VS Code typings pinned to the minimum supported API version. Update the
 dependency lockfile with manifest changes; do not use forced audit upgrades without
 examining compatibility. No runtime npm dependencies should be required.
 
+Compiler upgrades must remain within the installed `typescript-eslint` peer
+dependency range. Dependabot currently defers TypeScript 7 and later because the
+parser supports TypeScript versions below 6.1. Remove that ignore only after the
+parser supports the proposed compiler and the complete CI matrix passes. Do not
+use `--force` or `--legacy-peer-deps` to conceal an unsupported combination.
+
 The test CLI currently constrains Mocha to an older major with vulnerable
 serialization/diff dependencies. A narrowly scoped override uses patched Mocha 12.
 Keep the minimum/stable extension-host tests green when updating it, and remove
 the override when the upstream test CLI supports the patched major.
+The test-electron override also keeps the test CLI on the same current downloader
+as the project, including support for newer macOS application layouts.
+
+### Registry portability
+
+Do not commit a corporate registry URL or registry credentials. The project
+`.npmrc` only enables `omit-lockfile-registry-resolved`: the lockfile retains exact
+versions and integrity hashes without embedding registry download URLs.
+`npm ci` uses the registry configured in each environment. Corporate development
+can therefore keep its required registry/CFS configuration, while public
+contributors and GitHub Actions use their normal public registry.
+
+Run `npm install` with the same project configuration when updating dependencies.
+The package verification check rejects registry URLs in the lockfile so a local
+corporate configuration cannot accidentally become a public installation requirement.
+
+A registry-neutral lockfile does not guarantee that every registry has mirrored
+every locked version. If a required corporate feed reports `ETARGET` for a version
+that passes public CI, request the package through the corporate feed's normal
+process. Do not switch registries to bypass corporate controls. Public CI and the
+release-candidate workflow can validate the exact commit while mirroring is pending.
 
 ## Implementation boundaries
 
@@ -56,6 +83,27 @@ the override when the upstream test CLI supports the patched major.
 Keep command arguments structured and validate identifiers. Never log raw CLI
 output or credentials. Error states must not be represented as successful empty
 results. Dispose listeners, menus, timers and owned processes.
+
+## CLI Context branding
+
+The display name is **CLI Context: Azure**. Keep the published identity
+`jcallaghan.azure-cli-context`, the `azure-cli-context.*` command IDs and the
+configuration keys stable when changing presentation.
+
+The Marketplace icon is an original terminal frame with a CLI label, ellipsis and
+an AZ tag, not a Microsoft product logo. Within VS Code, use the built-in Azure
+glyph to identify Azure context. A future **CLI Context: GitHub** companion can use
+the same icon geometry with a GH tag; it is not part of this extension.
+
+The committed 256-pixel PNG requires no build-time image dependencies. To regenerate
+it on Windows with PowerShell 7 and the installed Segoe UI font:
+
+```powershell
+pwsh -NoProfile -File .\scripts\generate-icon.ps1 -Tag AZ -OutputPath .\images\icon.png
+```
+
+Use `-Tag GH` and a separate output path to preview the companion artwork without
+replacing the Azure asset. Review generated icons at 256, 128 and 64 pixels.
 
 ## Manual release checklist
 

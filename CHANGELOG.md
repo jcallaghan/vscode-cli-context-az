@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Branding
+
+- Renamed the displayed extension, settings group, command category, account menu,
+  Output channel and login terminal to **CLI Context: Azure**.
+- Added an original CLI terminal-and-ellipsis icon with an **AZ** provider tag,
+  reusable with **GH** for a future companion.
+- Kept the built-in Azure status-bar icon and all existing extension, command and
+  configuration identifiers unchanged.
+
 ### Hardened
 
 - Runtime validation of Azure CLI account data and subscription GUIDs.

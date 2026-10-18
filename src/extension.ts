@@ -11,11 +11,12 @@ interface AccountItem extends vscode.QuickPickItem {
 	action?: Action;
 }
 
+const displayName = 'CLI Context: Azure';
 let extension: AzureContext | undefined;
 
 class AzureContext implements vscode.Disposable {
 	private readonly cli = new AzureCli();
-	private readonly output = vscode.window.createOutputChannel('Azure CLI Context');
+	private readonly output = vscode.window.createOutputChannel(displayName);
 	private readonly status = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
 	private readonly subscriptions: vscode.Disposable[] = [this.output, this.status];
 	private currentAccount: AzureAccount | null = null;
@@ -29,7 +30,7 @@ class AzureContext implements vscode.Disposable {
 	private startingLogin = false;
 
 	constructor() {
-		this.status.name = 'Azure CLI Context';
+		this.status.name = displayName;
 		this.status.command = 'azure-cli-context.showAccountMenu';
 		const actions: Record<string, () => Promise<unknown>> = {
 			showAccountMenu: () => this.showAccountMenu(),
@@ -87,7 +88,7 @@ class AzureContext implements vscode.Disposable {
 		// Never log raw CLI output, command arguments, account identifiers or credentials.
 		this.output.appendLine(`[${kind}] ${message}`);
 		if (notify && kind !== 'cancelled') {
-			void vscode.window.showErrorMessage(`Azure CLI Context: ${message}`);
+			void vscode.window.showErrorMessage(`${displayName}: ${message}`);
 		}
 	}
 
@@ -117,7 +118,7 @@ class AzureContext implements vscode.Disposable {
 		} catch (error) {
 			this.report(error, false);
 			void vscode.window.showWarningMessage(
-				'Azure CLI Context: automatic file refresh is unavailable. Use Refresh Azure Account or refocus the window.'
+				`${displayName}: automatic file refresh is unavailable. Use Refresh Azure Account or refocus the window.`
 			);
 		}
 	}
@@ -173,7 +174,7 @@ class AzureContext implements vscode.Disposable {
 			const account = this.currentAccount;
 			const name = this.visible('showSubscriptionName') ? account.name : 'Azure';
 			this.status.text = `$(azure) ${name.length > 30 ? `${name.slice(0, 27)}...` : name}`;
-			const lines = ['Azure CLI Context'];
+			const lines = [displayName];
 			if (this.visible('showUser')) {
 				lines.push(`User: ${account.user.name}`);
 			}
@@ -191,7 +192,7 @@ class AzureContext implements vscode.Disposable {
 		}
 		const context = this.currentAccount && this.visible('showSubscriptionName') ?
 			this.currentAccount.name : this.currentAccount ? 'Signed in' : 'Not logged in';
-		this.status.accessibilityInformation = { label: `Azure CLI context: ${context}. Open account actions.` };
+		this.status.accessibilityInformation = { label: `${displayName}. ${context}. Open account actions.` };
 		this.status.show();
 	}
 
@@ -250,7 +251,7 @@ class AzureContext implements vscode.Disposable {
 		this.menu?.hide();
 		const menu = vscode.window.createQuickPick<AccountItem>();
 		this.menu = menu;
-		menu.title = 'Azure CLI Context';
+		menu.title = displayName;
 		menu.placeholder = 'Loading Azure subscriptions...';
 		menu.busy = true;
 		const accept = menu.onDidAccept(() => {
@@ -367,7 +368,7 @@ class AzureContext implements vscode.Disposable {
 			}
 			const invocation = createInvocation(executable, ['login', '--output', 'none', '--only-show-errors']);
 			const terminal = vscode.window.createTerminal({
-				name: 'Azure CLI Login',
+				name: `${displayName} Login`,
 				cwd: os.homedir(),
 				shellPath: invocation.file,
 				shellArgs: invocation.windowsVerbatimArguments ? invocation.args.join(' ') : invocation.args,

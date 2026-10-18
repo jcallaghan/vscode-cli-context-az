@@ -1,7 +1,7 @@
 {
   "name": "azure-cli-context",
-  "displayName": "Azure CLI Context",
-  "description": "Shows Azure CLI user and subscription in status bar with account switching",
+  "displayName": "CLI Context: Azure",
+  "description": "Keep your Azure CLI context visible in VS Code. View accounts, switch subscriptions and copy IDs from the status bar.",
   "version": "0.1.0",
   "publisher": "jcallaghan",
   "author": {
@@ -26,7 +26,8 @@
     "azure-cli",
     "subscription",
     "account",
-    "context"
+    "context",
+    "cli-context"
   ],
   "engines": {
     "vscode": "^1.107.0",
@@ -36,11 +37,11 @@
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": false,
-      "description": "Azure CLI Context executes the Azure CLI and can change the account used by other tools. Trust the workspace to enable it."
+      "description": "CLI Context: Azure executes the Azure CLI and can change the account used by other tools. Trust the workspace to enable it."
     },
     "virtualWorkspaces": {
       "supported": false,
-      "description": "Azure CLI Context requires an extension host with a filesystem and an installed Azure CLI."
+      "description": "CLI Context: Azure requires an extension host with a filesystem and an installed Azure CLI."
     }
   },
   "categories": [
@@ -53,7 +54,7 @@
   "main": "./dist/extension.js",
   "contributes": {
     "configuration": {
-      "title": "Azure CLI Context",
+      "title": "CLI Context: Azure",
       "properties": {
         "azure-cli-context.showSubscriptionName": {
           "type": "boolean",
@@ -85,43 +86,43 @@
       {
         "command": "azure-cli-context.showAccountMenu",
         "title": "Show Azure Account Menu",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(azure)"
       },
       {
         "command": "azure-cli-context.refresh",
         "title": "Refresh Azure Account",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(refresh)"
       },
       {
         "command": "azure-cli-context.login",
         "title": "Login to Azure CLI",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(sign-in)"
       },
       {
         "command": "azure-cli-context.logout",
         "title": "Logout from Azure CLI",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(sign-out)"
       },
       {
         "command": "azure-cli-context.switchSubscription",
         "title": "Switch Azure Subscription",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(list-unordered)"
       },
       {
         "command": "azure-cli-context.copySubscriptionId",
         "title": "Copy Subscription ID",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(copy)"
       },
       {
         "command": "azure-cli-context.copyTenantId",
         "title": "Copy Tenant ID",
-        "category": "Azure CLI Context",
+        "category": "CLI Context: Azure",
         "icon": "$(copy)"
       }
     ]
@@ -145,20 +146,21 @@
   },
   "overrides": {
     "@vscode/test-cli": {
-      "mocha": "^12.0.3"
+      "mocha": "^12.0.3",
+      "@vscode/test-electron": "$@vscode/test-electron"
     }
   },
   "devDependencies": {
     "@types/vscode": "1.107.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.48.1",
+    "typescript-eslint": "^8.71.2",
     "eslint": "^9.39.1",
-    "esbuild": "^0.27.1",
+    "esbuild": "^0.28.2",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3",
     "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^2.5.2",
+    "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^4.0.0"
   }
 }

@@ -36,6 +36,7 @@ function setup(t, options = {}) {
 	const errors = [];
 	const information = [];
 	const logs = [];
+	const outputNames = [];
 	const clipboard = [];
 	const menus = [];
 	const terminals = [];
@@ -112,7 +113,7 @@ function setup(t, options = {}) {
 		},
 		window: {
 			createStatusBarItem: () => status,
-			createOutputChannel: () => output,
+			createOutputChannel: name => { outputNames.push(name); return output; },
 			onDidChangeWindowState: focus.subscribe,
 			onDidEndTerminalShellExecution: terminalEnd.subscribe,
 			onDidCloseTerminal: terminalClose.subscribe,
@@ -164,7 +165,7 @@ function setup(t, options = {}) {
 	exports.activate({ subscriptions });
 	t.after(() => exports.deactivate());
 	return {
-		status, commands, calls, errors, information, logs, clipboard, menus, terminals,
+		status, commands, calls, errors, information, logs, outputNames, clipboard, menus, terminals,
 		configuration, focus, config, terminalEnd, terminalClose, watcherChange, watcherCreate, watcherDelete,
 		dispose: exports.deactivate,
 		command: name => commands.get(`azure-cli-context.${name}`)(),
@@ -183,6 +184,24 @@ test('renders verified account details and registers all seven commands', async 
 	assert.match(h.status.text, /Current/);
 	assert.match(h.status.tooltip, /user@example.test/);
 	assert.match(h.status.tooltip, new RegExp(id));
+});
+
+test('uses CLI Context branding while retaining the Azure glyph and existing command IDs', async t => {
+	const h = setup(t);
+	await tick();
+	assert.equal(h.status.name, 'CLI Context: Azure');
+	assert.deepEqual(h.outputNames, ['CLI Context: Azure']);
+	assert.match(h.status.tooltip, /^CLI Context: Azure\n/);
+	assert.match(h.status.text, /^\$\(azure\) /);
+	assert.match(h.status.accessibilityInformation.label, /^CLI Context: Azure\./);
+	assert.deepEqual([...h.commands.keys()].sort(), [
+		'copySubscriptionId', 'copyTenantId', 'login', 'logout', 'refresh',
+		'showAccountMenu', 'switchSubscription'
+	].map(name => `azure-cli-context.${name}`).sort());
+	await h.command('showAccountMenu');
+	assert.equal(h.menus[0].title, 'CLI Context: Azure');
+	await h.command('login');
+	assert.equal(h.terminals[0].options.name, 'CLI Context: Azure Login');
 });
 
 test('distinguishes a missing CLI from a signed-out account and reports manual failures', async t => {
