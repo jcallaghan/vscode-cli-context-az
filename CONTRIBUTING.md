@@ -45,6 +45,8 @@ dependency range. Dependabot currently defers TypeScript 7 and later because the
 parser supports TypeScript versions below 6.1. Remove that ignore only after the
 parser supports the proposed compiler and the complete CI matrix passes. Do not
 use `--force` or `--legacy-peer-deps` to conceal an unsupported combination.
+Node and Mocha ambient types are explicitly listed in `tsconfig.json`, as required
+by TypeScript 6; VS Code module types remain pinned to the minimum supported API.
 
 The test CLI currently constrains Mocha to an older major with vulnerable
 serialization/diff dependencies. A narrowly scoped override uses patched Mocha 12.
