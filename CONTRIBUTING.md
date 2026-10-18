@@ -40,6 +40,12 @@ Keep the VS Code typings pinned to the minimum supported API version. Update the
 dependency lockfile with manifest changes; do not use forced audit upgrades without
 examining compatibility. No runtime npm dependencies should be required.
 
+Compiler upgrades must remain within the installed `typescript-eslint` peer
+dependency range. Dependabot currently defers TypeScript 7 and later because the
+parser supports TypeScript versions below 6.1. Remove that ignore only after the
+parser supports the proposed compiler and the complete CI matrix passes. Do not
+use `--force` or `--legacy-peer-deps` to conceal an unsupported combination.
+
 The test CLI currently constrains Mocha to an older major with vulnerable
 serialization/diff dependencies. A narrowly scoped override uses patched Mocha 12.
 Keep the minimum/stable extension-host tests green when updating it, and remove
@@ -59,6 +65,12 @@ contributors and GitHub Actions use their normal public registry.
 Run `npm install` with the same project configuration when updating dependencies.
 The package verification check rejects registry URLs in the lockfile so a local
 corporate configuration cannot accidentally become a public installation requirement.
+
+A registry-neutral lockfile does not guarantee that every registry has mirrored
+every locked version. If a required corporate feed reports `ETARGET` for a version
+that passes public CI, request the package through the corporate feed's normal
+process. Do not switch registries to bypass corporate controls. Public CI and the
+release-candidate workflow can validate the exact commit while mirroring is pending.
 
 ## Implementation boundaries
 
